@@ -74,9 +74,11 @@ app.get('/api/ready', (req, res) => {
         allReady = true;
         console.log('all players ready for final showdown');
     }
-
+    var names = ["Gryffindor", "Slytherin", "Hufflepuff", "Ravenclaw"];
+    
     return res.status(200).send({
         success: true,
+        name: names[playerId],
         cards: game.players[playerId],
     });
 });
