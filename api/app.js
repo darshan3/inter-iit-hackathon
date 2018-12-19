@@ -30,7 +30,7 @@ if (fs.existsSync('game-data.json')) {
     let rawdata = fs.readFileSync('game-data.json');  
     game = JSON.parse(rawdata);  
 }
-// = { status: 'distribute',
+// = { status: 'start',
 //   currentPlay: 0,
 //   currentValidCards: [ 27, 31, 7, 23, 51, 2, 34, 50, 13, 41, 5, 44, 24 ],
 //   players:
@@ -43,10 +43,10 @@ var allReady = false;
 // query = { id, name }
 app.get('/api/ready', (req, res) => {
     console.log('ready request', req.query);
-    if(game.status != 'distribute') {
+    if(game.status != 'start') {
         return res.status(400).send({
             success: false,
-            message: 'Game status is not in distribute',
+            message: 'Game status is not in start',
         })
     }
     if(!req.query.id) {
@@ -67,11 +67,12 @@ app.get('/api/ready', (req, res) => {
         player_uuid.push(req.query.id);
         playerNames.push(req.query.name); //  send this to server
         playerId = player_uuid.length - 1;
-        console.log(player_uuid);
+        console.log('player Id..', playerId);
     }
     if (playerId === 3){
         // send this to server
         allReady = true;
+        console.log('all players ready for final showdown');
     }
 
     return res.status(200).send({
@@ -131,9 +132,9 @@ app.post('/api/playCard', (req, res) => {
 });
 
 app.post('/api/internalPost', (req, res) => {
-    console.log('internal post');
     game = req.body; 
     let data = JSON.stringify(game);  
+    console.log(game.status);
     fs.writeFileSync('game-data.json', data); 
     return res.status(200).send({
         success: true
