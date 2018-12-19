@@ -26,9 +26,9 @@ var playerNames = [];
 var events = [];
 var game ;
 // Retrieve game data from the last synced state
-if (fs.existsSync('game-data.json')) {
-    let rawdata = fs.readFileSync('game-data.json');  
-    game = JSON.parse(rawdata);  
+// if (fs.existsSync('game-data.json')) {
+//     let rawdata = fs.readFileSync('game-data.json');  
+//     game = JSON.parse(rawdata);  
 }
 // = { status: 'start',
 //   currentPlay: 0,
