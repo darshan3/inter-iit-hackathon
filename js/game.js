@@ -111,6 +111,10 @@ function(ui,   Human,    board,   config,   $,        rules){
             (function waitForAllReady(){
                 $.get( "http://10.196.3.196:6970/api/internalGet", function( data ) {
                     console.log(data);
+                    players.forEach(function(p) => {
+                        p.display = domBinding.createPlayerDisplay(p.id, data.playerNames[p.id]);
+                    });
+                    config.names = data.playerNames;
                     if (data.allReady == true) return resolve();
                     setTimeout(waitForAllReady, 1000);
                 });
@@ -148,6 +152,9 @@ function(ui,   Human,    board,   config,   $,        rules){
                 played = 0;
                 $.get( "http://10.196.3.196:6970/api/internalGet", function( data ) {
                         console.log(data);
+                        players.forEach(function(p) => {
+                            p.display = domBinding.createPlayerDisplay(p.id, data.playerNames[p.id]);
+                        });
                         if (data.allReady == true) status = 'playing';
                 });
                 // setTimeout(function(){},500)

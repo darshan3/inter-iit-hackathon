@@ -24,12 +24,12 @@ app.get('/',function(req,res){
 var player_uuid = [];
 var playerNames = [];
 var events = [];
-var game ;
+var game;
 // Retrieve game data from the last synced state
 // if (fs.existsSync('game-data.json')) {
 //     let rawdata = fs.readFileSync('game-data.json');  
 //     game = JSON.parse(rawdata);  
-}
+// }
 // = { status: 'start',
 //   currentPlay: 0,
 //   currentValidCards: [ 27, 31, 7, 23, 51, 2, 34, 50, 13, 41, 5, 44, 24 ],
