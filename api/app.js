@@ -3,6 +3,7 @@ var _ = require('lodash');
 var require = require('requirejs');
 var app = express();
 var body_parser = require('body-parser');
+const fs = require('fs');
 
 // Use middleware to set the default Content-Type
 app.use(function (req, res, next) {
@@ -24,6 +25,11 @@ var player_uuid = [];
 var playerNames = [];
 var events = [];
 var game ;
+// Retrieve game data from the last synced state
+if (fs.existsSync('game-data.json')) {
+    let rawdata = fs.readFileSync('game-data.json');  
+    game = JSON.parse(rawdata);  
+}
 // = { status: 'distribute',
 //   currentPlay: 0,
 //   currentValidCards: [ 27, 31, 7, 23, 51, 2, 34, 50, 13, 41, 5, 44, 24 ],
@@ -129,7 +135,8 @@ app.post('/api/internalPost', (req, res) => {
     console.log('...params', req.params);
     console.log('...query', req.query);
     game = req.body; 
-    console.log(game);
+    let data = JSON.stringify(game);  
+    fs.writeFileSync('game-data.json', data); 
     return res.status(200).send({
         success: true
     });
