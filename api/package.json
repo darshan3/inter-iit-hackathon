@@ -1,0 +1,17 @@
+{
+    "name": "court-piece",
+    "version": "1.0.0",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "fs": "0.0.1-security",
+        "http": "0.0.0",
+        "lodash": "^4.17.11",
+        "requirejs": "^2.3.6"
+    },
+    "engine-strict": true,
+    "engines": {
+        "node": "^8.10.0",
+        "yarn": "^1.0.0"
+    }
+}
