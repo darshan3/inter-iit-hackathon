@@ -97,7 +97,7 @@ function(ui,   Human,    board,   config,   $,        rules){
             $.ajax({
                   contentType: "application/json",
                   type: "POST",
-                  url: "http://192.168.0.109:6969/api/internalPost",
+                  url: "http://10.196.3.196:6970/api/internalPost",
                   data: JSON.stringify(payload),
                   dataType: "json",
                   success: function(data){
@@ -109,10 +109,10 @@ function(ui,   Human,    board,   config,   $,        rules){
     var ensureAllReady = async function() {
         return new Promise(function (resolve, reject) {
             (function waitForAllReady(){
-                $.get( "http://192.168.0.109:6969/api/internalGet", function( data ) {
+                $.get( "http://10.196.3.196:6970/api/internalGet", function( data ) {
                     console.log(data);
                     if (data.allReady == true) return resolve();
-                    setTimeout(waitForAllReady, 50);
+                    setTimeout(waitForAllReady, 1000);
                 });
             })();
         });
@@ -146,11 +146,11 @@ function(ui,   Human,    board,   config,   $,        rules){
             if (status == 'start'){
                 currentPlay = board.cards[26].parent.playedBy.id;
                 played = 0;
-                $.get( "http://192.168.0.109:6969/api/internalGet", function( data ) {
+                $.get( "http://10.196.3.196:6970/api/internalGet", function( data ) {
                         console.log(data);
                         if (data.allReady == true) status = 'playing';
                 });
-                setTimeout(function(){},500)
+                // setTimeout(function(){},500)
             } else if (status == 'playing'){
                 currentPlay = (currentPlay + 1) % 4;
                 played++;
@@ -234,6 +234,8 @@ function(ui,   Human,    board,   config,   $,        rules){
                     });
                 },
                 'playing': function(){
+
+                    updateStatus();
                     players[currentPlay].setActive(true);
                     $.when(players[currentPlay].decide(
                         rules.getValidCards(players[currentPlay].row.cards,

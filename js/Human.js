@@ -35,7 +35,7 @@ function(Player,  $,         ui){
         var row = this.row;
 
         const waitForEvent = setInterval(() => {
-            $.get('http://192.168.0.109/api/internalGet', (data) => {
+            $.get('http://10.196.3.196:6970/api/internalGet', (data) => {
                 while(data.events.length > 0) {
                     clearInterval(waitForEvent);
                     let selectedCard = row.cards.find((crd) => {
@@ -45,8 +45,7 @@ function(Player,  $,         ui){
                     d.resolve(selectedCard);
                 }
             })
-        })
-
+        },1000);
         // ui.buttonClickOnce(function(){
         //     ui.hideMessage();
         //     ui.hideButton();
