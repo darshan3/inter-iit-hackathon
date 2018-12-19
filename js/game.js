@@ -26,32 +26,6 @@ function(ui,   Human,    board,   config,   $,        rules){
         return d;
     };
 
-    // var initBrains = function(){
-    //     // players[0].brain = new AsyncBrain(players[0], "PomDPBrain");
-
-    //     if(players[1].brain){
-    //         players[1].brain.terminate();
-    //         players[2].brain.terminate();
-    //         players[3].brain.terminate();
-    //     }
-
-    //     for(var i = 1; i < 4; i++){
-    //         if(config.levels[i] == 1){
-    //             players[i].brain = new SimpleBrain(players[i]);
-    //         } else if(config.levels[i] == 2){
-    //             players[i].brain = new AsyncBrain(players[i], "McBrain");
-    //         } else if(config.levels[i] == 3){
-    //             players[i].brain = new AsyncBrain(players[i], "PomDPBrain");
-    //         } else if(config.levels[i] == 4){
-    //             players[i].brain = new AsyncBrain(players[i], "PomDPBrain", {time: 2000});
-    //         }
-    //     }
-
-    //     return $.when(players[1].brain.init(),
-    //                   players[2].brain.init(),
-    //                   players[3].brain.init());
-    // };
-
     var informCardOut = function(player, card){
         if(card.suit === 1){
             heartBroken = true;
@@ -95,7 +69,7 @@ function(ui,   Human,    board,   config,   $,        rules){
 
             console.log("hi");
             console.log(status, "next");
-            if (status == 'confirming'){
+            if (status == 'start'){
                 currentPlay = board.cards[26].parent.playedBy.id;
                 played = 0;
             } else if (status == 'playing'){
@@ -111,7 +85,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                 status = ({
                     'prepare': 'distribute',
                     'distribute': 'start',
-                    'start': 'passing',
+                    'start': 'playing',
                     'passing': 'confirming',
                     'confirming': 'playing',
                     'playing': 'playing',
@@ -154,9 +128,10 @@ function(ui,   Human,    board,   config,   $,        rules){
                 },
                 'start': function(){
                     rounds++;
-                    $.when.apply($, players.map(function(p){
-                        return p.prepareTransfer(rounds % 3);
-                    })).done(this.next.bind(this));
+                    this.next();
+                    // $.when.apply($, players.map(function(p){
+                    //     return p.prepareTransfer(rounds % 3);
+                    // })).done(this.next.bind(this));
                 },
                 'passing': function(){
                     for(var i = 0; i < 4; i++){
@@ -177,12 +152,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                     $.when(players[currentPlay].decide(
                         rules.getValidCards(players[currentPlay].row.cards,
                                             board.desk.cards[0] ? board.desk.cards[0].suit : -1,
-                                            heartBroken),
-                        board.desk.cards,
-                        board.desk.players,
-                        players.map(function(p){
-                            return p.getScore();
-                        })), waitDefer(200))
+                                            heartBroken)), waitDefer(200))
                     .done(function(card){
                         players[currentPlay].setActive(false);
                         card.parent.out(card);

@@ -6,6 +6,7 @@ function(Player,  $,         ui){
         Player.call(this, id, name);
         this.row.flipped = false;
         this.display.setHuman(true);
+        this.row.maxShift = 1;
     };
 
     Human.prototype = Object.create(Player.prototype);
@@ -79,19 +80,22 @@ function(Player,  $,         ui){
     };
 
     Human.prototype.rowSelected = function(){
-        if(this.row.maxShift === 3){
-            ui.showArrow();
-        } else {
-            ui.showButton("Go!");
-        }
+        // if(this.row.maxShift === 3){
+        //     ui.showArrow();
+        // } else {
+        //     ui.showButton("Go!");
+        // }
+        console.log("clicked button");
+        ui.showButton("Go!");
     };
 
     Human.prototype.rowDeselected = function(){
-        if(this.row.maxShift === 3){
-            ui.hideArrow();
-        } else {
-            ui.hideButton();
-        }
+        // if(this.row.maxShift === 3){
+        //     ui.hideArrow();
+        // } else {
+        //     ui.hideButton();
+        // }
+        ui.hideButton();
     };
 
     return Human;
