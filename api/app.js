@@ -43,7 +43,7 @@ var allReady = false;
 // query = { id, name }
 app.get('/api/ready', (req, res) => {
     console.log('ready request', req.query);
-    if(game.status != 'start') {
+    if(game.status != 'start' && game.status  != 'playing') {
         return res.status(400).send({
             success: false,
             message: 'Game status is not in start',
@@ -165,7 +165,7 @@ app.get('/api/extPost', (req, res)  => {
 
 })
 
-const PORT = 6970;
+const PORT = 6969;
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
