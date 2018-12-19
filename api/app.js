@@ -81,12 +81,12 @@ app.get('/api/ready', (req, res) => {
 });
 
 app.post('/api/playCard', (req, res) => {
-    console.log('play Card post');
+    console.log('play Card post - game status', game.status, '..req id', req.body.id, '..player uuid -- ', player_uuid);
     if(game.status != 'playing') {
         return res.status(400).send({
             success: false,
             message: 'Game status is not in playing state',
-        })
+        });
     }
     if(!req.body.id) {
         return res.status(400).send({
@@ -100,7 +100,7 @@ app.post('/api/playCard', (req, res) => {
             message: 'card played is reqd'
         });
     }
-    let playerId = _.findIndex(player_uuid, req.body.id);
+    let playerId = _.findIndex(player_uuid, (id) => {return id==req.body.id});
     if( playerId === -1 ){
         return res.status(400).send({
             success: false,
@@ -113,11 +113,11 @@ app.post('/api/playCard', (req, res) => {
             message: 'Not your turn yet'
         });
     }
-    if( _.findIndex(game.current_valid_cards, card) >= 0 ) {
+    if( _.findIndex(game.currentValidCards, (card) => {return card.id==req.body.card.id}) >= 0 ) {
         // Queuing this event to send to server
         events.push({
             playerId,
-            card
+            card: req.body.card,
         });
         return res.status(200).send({
             success: true,
@@ -132,8 +132,6 @@ app.post('/api/playCard', (req, res) => {
 
 app.post('/api/internalPost', (req, res) => {
     console.log('internal post');
-    console.log('...params', req.params);
-    console.log('...query', req.query);
     game = req.body; 
     let data = JSON.stringify(game);  
     fs.writeFileSync('game-data.json', data); 
@@ -143,7 +141,7 @@ app.post('/api/internalPost', (req, res) => {
 })
 
 app.get('/api/internalGet', (req, res) => {
-    console.log('internal get');
+    // console.log('internal get');
     res.status(200).send({
         allReady,
         playerNames,
@@ -154,7 +152,19 @@ app.get('/api/internalGet', (req, res) => {
 
 })
 
-const PORT = 6969;
+// For testing by developers
+app.get('/api/extPost', (req, res)  => {
+    console.log('external post');
+    allReady = true;    
+    player_uuid = ['a0','a1','a2','a3'];
+    console.log('..game current play', game.currentPlay);
+    return res.status(200).send({
+        success: true
+    });
+
+})
+
+const PORT = 6970;
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
