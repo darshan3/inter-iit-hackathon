@@ -33,14 +33,28 @@ function(Player,  $,         ui){
 
         var d = $.Deferred();
         var row = this.row;
-        ui.buttonClickOnce(function(){
-            ui.hideMessage();
-            ui.hideButton();
-            validCards.forEach(function(c){
-                c.display.setSelectable(false);
-            });
-            d.resolve(row.getSelected()[0]);
-        });
+
+        const waitForEvent = setInterval(() => {
+            $.get('http://192.168.0.109/api/internalGet', (data) => {
+                while(data.events.length > 0) {
+                    clearInterval(waitForEvent);
+                    let selectedCard = row.cards.find((crd) => {
+                        return crd.id === data.events[0].card.id;
+                    });
+                    data.events.shift();
+                    d.resolve(selectedCard);
+                }
+            })
+        })
+
+        // ui.buttonClickOnce(function(){
+        //     ui.hideMessage();
+        //     ui.hideButton();
+        //     validCards.forEach(function(c){
+        //         c.display.setSelectable(false);
+        //     });
+        //     d.resolve(row.getSelected()[0]);
+        // });
         return d;
     };
 
