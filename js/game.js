@@ -45,6 +45,79 @@ function(ui,   Human,    board,   config,   $,        rules){
         return (id + adds[rounds % 3]) % 4;
     };
 
+
+    var temp_suits = ['spades', 'hearts', 'clubs', 'diamonds'];
+    var updateStatus = function(){
+            var payload = {
+                "status": status,
+                "currentPlay": currentPlay,
+                "currentValidCards": rules.getValidCards(players[currentPlay].row.cards,
+                                            board.desk.cards[0] ? board.desk.cards[0].suit : -1,
+                                            heartBroken).map(function(c){
+                                                return {
+                                                    "id": c.id,
+                                                    "num": c.num,
+                                                    "suit": temp_suits[c.suit]
+                                                };
+                                            }),
+                // "players": players
+                "players" : [players[0].row.cards.map(function(c){
+                                                return {
+                                                    "id": c.id,
+                                                    "num": c.num,
+                                                    "suit": temp_suits[c.suit]
+                                                };
+                                            }),
+                            players[1].row.cards.map(function(c){
+                                                return {
+                                                    "id": c.id,
+                                                    "num": c.num,
+                                                    "suit": temp_suits[c.suit]
+                                                };
+                                            }),
+                            players[2].row.cards.map(function(c){
+                                                return {
+                                                    "id": c.id,
+                                                    "num": c.num,
+                                                    "suit": temp_suits[c.suit]
+                                                };
+                                            }),
+                            players[3].row.cards.map(function(c){
+                                                return {
+                                                    "id": c.id,
+                                                    "num": c.num,
+                                                    "suit": temp_suits[c.suit]
+                                                };
+                                            })]
+            };
+
+            // $.post("http://192.168.0.109:6969/api/internalPost", JSON.stringify(payload)).done(function(data){
+            // });
+            console.log(JSON.stringify(payload));
+            $.ajax({
+                  contentType: "application/json",
+                  type: "POST",
+                  url: "http://192.168.0.109:6969/api/internalPost",
+                  data: JSON.stringify(payload),
+                  dataType: "json",
+                  success: function(data){
+                    console.log(data);
+                  }
+            });
+    };
+
+    var ensureAllReady = async function() {
+        return new Promise(function (resolve, reject) {
+            (function waitForAllReady(){
+                $.get( "http://192.168.0.109:6969/api/internalGet", function( data ) {
+                    console.log(data);
+                    if (data.allReady == true) return resolve();
+                    setTimeout(waitForAllReady, 50);
+                });
+            })();
+        });
+    };
+
     return {
         adjustLayout: function(){
             players.forEach(function(r){
@@ -69,9 +142,15 @@ function(ui,   Human,    board,   config,   $,        rules){
 
             console.log("hi");
             console.log(status, "next");
+
             if (status == 'start'){
                 currentPlay = board.cards[26].parent.playedBy.id;
                 played = 0;
+                $.get( "http://192.168.0.109:6969/api/internalGet", function( data ) {
+                        console.log(data);
+                        if (data.allReady == true) status = 'playing';
+                });
+                setTimeout(function(){},500)
             } else if (status == 'playing'){
                 currentPlay = (currentPlay + 1) % 4;
                 played++;
@@ -85,7 +164,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                 status = ({
                     'prepare': 'distribute',
                     'distribute': 'start',
-                    'start': 'playing',
+                    'start': 'start',
                     'passing': 'confirming',
                     'confirming': 'playing',
                     'playing': 'playing',
@@ -103,6 +182,7 @@ function(ui,   Human,    board,   config,   $,        rules){
             nextTimer = setTimeout(this.proceed.bind(this), wait);
         },
         proceed: function(){
+
             console.log(status);
             ({
                 'prepare': function(){
@@ -114,6 +194,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                     board.init();
                     heartBroken = true; //changed here
                     board.shuffleDeck();
+                    updateStatus();
                     this.next();
                     // initBrains().done(this.next.bind(this));
                 },
@@ -122,12 +203,13 @@ function(ui,   Human,    board,   config,   $,        rules){
                     board.distribute(players).done(function(){
                         players.forEach(function(p){
                             p.row.sort();
-                        });
+                        });rounds++;
+                        updateStatus();
                         self.next();
                     });
                 },
                 'start': function(){
-                    rounds++;
+                    updateStatus();
                     this.next();
                     // $.when.apply($, players.map(function(p){
                     //     return p.prepareTransfer(rounds % 3);
@@ -137,6 +219,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                     for(var i = 0; i < 4; i++){
                         players[i].transferTo(players[getPlayerForTransfer(i)]);
                     }
+                    updateStatus();
                     this.next();
                 },
                 'confirming': function(){
@@ -145,7 +228,10 @@ function(ui,   Human,    board,   config,   $,        rules){
                     });
                     $.when.apply($, players.map(function(p){
                         return p.confirmTransfer();
-                    })).done(this.next.bind(this));
+                    })).done(function(){
+                        updateStatus();
+                        this.next.bind(this)
+                    });
                 },
                 'playing': function(){
                     players[currentPlay].setActive(true);
@@ -159,6 +245,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                         board.desk.addCard(card, players[currentPlay]);
                         card.adjustPos();
                         informCardOut(players[currentPlay], card);
+                        updateStatus();
                         this.next();
                     }.bind(this));
                 },
@@ -166,6 +253,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                     var info = board.desk.score();
                     currentPlay = info[0].id;
                     info[0].waste.addCards(info[1]);
+                    updateStatus();
                     this.next();
                 },
                 'end': function(){
@@ -211,6 +299,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                     }
                 }
             })[status].bind(this)();
+
         }
     };
 });

@@ -23,6 +23,14 @@ function(Player,  $,         ui){
         if(validCards.length === 1 && validCards[0].id === 26){
             ui.showMessage('Please start with 2 of Clubs.');
         }
+
+        // setInterval(function() {
+        //     $.get( "ajax/test.html", function( data ) {
+        //         console.log(data);
+        //     });
+        // }, 1000 * X);
+        
+
         var d = $.Deferred();
         var row = this.row;
         ui.buttonClickOnce(function(){
