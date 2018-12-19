@@ -31,15 +31,18 @@ function(layout){
     };
 
     Waste.prototype.addCards = function(cards){
-        this.playedBy.incrementScore(cards.reduce(function(p, c){
-            if(c.suit === 1){
-                return p + 1;
-            }else if(c.suit === 0 && c.num === 11){
-                return p + 13;
-            }else{
-                return p;
-            }
-        }, 0));
+        this.playedBy.incrementScore(
+            // cards.reduce(function(p, c){
+            //     if(c.suit === 1){
+            //         return p + 1;
+            //     }else if(c.suit === 0 && c.num === 11){
+            //         return p + 13;
+            //     }else{
+            //         return p;
+            //     }
+            // }, 0)
+        1
+        );
         var finalCard;
         for(var i = 0; i < cards.length; i++){
             if(cards[i].pos.rotation === this.rotation){

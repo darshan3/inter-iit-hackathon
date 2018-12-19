@@ -14,7 +14,7 @@ function(ui,   Human,    board,   config,   $,        rules){
         currentPlay = 0,
         played = 0;
 
-    var heartBroken = false;
+    var heartBroken = true;//changed here
 
     var nextTimer = 0;
 
@@ -112,7 +112,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                         p.initForNewRound();
                     });
                     board.init();
-                    heartBroken = false;
+                    heartBroken = true; //changed here
                     board.shuffleDeck();
                     this.next();
                     // initBrains().done(this.next.bind(this));
@@ -169,17 +169,17 @@ function(ui,   Human,    board,   config,   $,        rules){
                     this.next();
                 },
                 'end': function(){
-                    if(players.some(function(p){
-                        return p.getScore() === 26;
-                    })){
-                        players.forEach(function(p){
-                            if(p.getScore() !== 26){
-                                p.setScore(26);
-                            }else{
-                                p.setScore(0);
-                            }
-                        });
-                    }
+                    // if(players.some(function(p){
+                    //     return p.getScore() === 26;
+                    // })){
+                    //     players.forEach(function(p){
+                    //         if(p.getScore() !== 26){
+                    //             p.setScore(26);
+                    //         }else{
+                    //             p.setScore(0);
+                    //         }
+                    //     });
+                    // }
                     players.forEach(function(p){
                         p.finalizeScore();
                     });
@@ -187,7 +187,7 @@ function(ui,   Human,    board,   config,   $,        rules){
                         return c;
                     });
                     rank.sort(function(a,b){
-                        return a._oldScore - b._oldScore;
+                        return b._oldScore - a._oldScore;
                     });
                     rank.forEach(function(r,ind){
                         r.display.rank = ind;
