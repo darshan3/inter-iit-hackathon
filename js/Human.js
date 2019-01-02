@@ -35,7 +35,7 @@ function(Player,  $,         ui){
         var row = this.row;
 
         const waitForEvent = setInterval(() => {
-            $.get('http://10.196.3.196:6970/api/internalGet', (data) => {
+            $.get('http://10.196.3.196:7000/api/internalGet', (data) => {
                 while(data.events.length > 0) {
                     clearInterval(waitForEvent);
                     let selectedCard = row.cards.find((crd) => {

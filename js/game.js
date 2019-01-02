@@ -97,7 +97,7 @@ function(ui,   Human,    board,   config,   $,        rules){
             $.ajax({
                   contentType: "application/json",
                   type: "POST",
-                  url: "http://10.196.3.196:6970/api/internalPost",
+                  url: "http://10.196.3.196:7000/api/internalPost",
                   data: JSON.stringify(payload),
                   dataType: "json",
                   success: function(data){
@@ -109,7 +109,7 @@ function(ui,   Human,    board,   config,   $,        rules){
     var ensureAllReady = async function() {
         return new Promise(function (resolve, reject) {
             (function waitForAllReady(){
-                $.get( "http://10.196.3.196:6970/api/internalGet", function( data ) {
+                $.get( "http://10.196.3.196:7000/api/internalGet", function( data ) {
                     console.log(data);
                     players.forEach(function(p) => {
                         p.display = domBinding.createPlayerDisplay(p.id, data.playerNames[p.id]);
@@ -150,7 +150,7 @@ function(ui,   Human,    board,   config,   $,        rules){
             if (status == 'start'){
                 currentPlay = board.cards[26].parent.playedBy.id;
                 played = 0;
-                $.get( "http://10.196.3.196:6970/api/internalGet", function( data ) {
+                $.get( "http://10.196.3.196:7000/api/internalGet", function( data ) {
                         console.log(data);
                         players.forEach(function(p) => {
                             p.display = domBinding.createPlayerDisplay(p.id, data.playerNames[p.id]);
