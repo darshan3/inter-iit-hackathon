@@ -167,7 +167,7 @@ app.get('/api/extPost', (req, res)  => {
 
 })
 
-const PORT = 6969;
+const PORT = 7000;
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
