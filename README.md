@@ -27,11 +27,11 @@ node app.js
 
 Then go to `http://localhost:7000` and you should see what is above referred as the client.
 
-![Client](/docs/images/client_landing_page.png "Client")
+![Client](/docs/images/client_landing_page "Client")
 
 * Controller 
 
-![controller](/docs/images/controller.png "Android app")
+![controller](/docs/images/controller "Android app")
 
 ### Acknowledgement
 
