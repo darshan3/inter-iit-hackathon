@@ -4,7 +4,7 @@ function(Player,  $,         ui){
 
     var Human = function(id, name){
         Player.call(this, id, name);
-        this.row.flipped = false;
+        this.row.flipped = true;
         this.display.setHuman(true);
         this.row.maxShift = 1;
     };
@@ -35,7 +35,7 @@ function(Player,  $,         ui){
         var row = this.row;
 
         const waitForEvent = setInterval(() => {
-            $.get('http://10.196.3.196:6970/api/internalGet', (data) => {
+            $.get('http://10.196.3.196:6969/api/internalGet', (data) => {
                 while(data.events.length > 0) {
                     clearInterval(waitForEvent);
                     let selectedCard = row.cards.find((crd) => {
