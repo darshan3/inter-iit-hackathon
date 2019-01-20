@@ -24,12 +24,12 @@ app.get('/',function(req,res){
 var player_uuid = [];
 var playerNames = [];
 var events = [];
-var game ;
+var game;
 // Retrieve game data from the last synced state
 // if (fs.existsSync('game-data.json')) {
 //     let rawdata = fs.readFileSync('game-data.json');  
 //     game = JSON.parse(rawdata);  
-}
+// }
 // = { status: 'start',
 //   currentPlay: 0,
 //   currentValidCards: [ 27, 31, 7, 23, 51, 2, 34, 50, 13, 41, 5, 44, 24 ],
@@ -74,9 +74,11 @@ app.get('/api/ready', (req, res) => {
         allReady = true;
         console.log('all players ready for final showdown');
     }
-
+    var names = ["Gryffindor", "Slytherin", "Hufflepuff", "Ravenclaw"];
+    
     return res.status(200).send({
         success: true,
+        name: names[playerId],
         cards: game.players[playerId],
     });
 });
@@ -165,7 +167,7 @@ app.get('/api/extPost', (req, res)  => {
 
 })
 
-const PORT = 6969;
+const PORT = 7000;
 
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)

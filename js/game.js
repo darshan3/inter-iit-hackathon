@@ -111,6 +111,10 @@ function(ui,   Human,    board,   config,   $,        rules){
             (function waitForAllReady(){
                 $.get( "http://10.196.3.196:6969/api/internalGet", function( data ) {
                     console.log(data);
+                    players.forEach(function(p) => {
+                        p.display = domBinding.createPlayerDisplay(p.id, data.playerNames[p.id]);
+                    });
+                    config.names = data.playerNames;
                     if (data.allReady == true) return resolve();
                     setTimeout(waitForAllReady, 1000);
                 });
@@ -146,8 +150,15 @@ function(ui,   Human,    board,   config,   $,        rules){
             if (status == 'start'){
                 currentPlay = board.cards[26].parent.playedBy.id;
                 played = 0;
+<<<<<<< HEAD
                 $.get( "http://10.196.3.196:6969/api/internalGet", function( data ) {
+=======
+                $.get( "http://10.196.3.196:7000/api/internalGet", function( data ) {
+>>>>>>> b9b3810a1906f8c00fdc03d663853c9ff0c52a4a
                         console.log(data);
+                        players.forEach(function(p) => {
+                            p.display = domBinding.createPlayerDisplay(p.id, data.playerNames[p.id]);
+                        });
                         if (data.allReady == true) status = 'playing';
                 });
                 // setTimeout(function(){},500)
